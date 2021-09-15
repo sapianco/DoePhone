@@ -1,6 +1,6 @@
 # DoePhone
 
-![](https://ceph.sapian.cloud/sapian-hackmd-public-bucket/uploads/upload_8255ef2cde808f2e00752ea25cb979ab.png)
+![](https://ceph.sapian.cloud/sapian-hackmd-public-bucket/uploads/upload_8255ef2cde808f2e00752ea25cb979ab.png =200x)
 
 el Softphone WebRTC de [DialBox Online Edition](http://www.sapian.co/dialbox-online-edition) te permitira realizar y atender llamadas directamente desde un navegador, no necesitas hacer ninguna instalación ni actualización.
 
