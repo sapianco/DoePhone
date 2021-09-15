@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "externalDatabase": {
+      "type": "object",
+      "title": "External Database Details",
+      "description": "If MariaDB is disabled. Use this section to specify the external database details",
+      "form": true,
+      "properties": {
+        "host": {
+          "type": "string",
+          "form": true,
+          "title": "Database Host"
+        },
+        "user": {
+          "type": "string",
+          "form": true,
+          "title": "Database Username"
+        },
+        "password": {
+          "type": "string",
+          "form": true,
+          "title": "Database Password"
+        },
+        "database": {
+          "type": "string",
+          "form": true,
+          "title": "Database Name"
+        },
+        "port": {
+          "type": "integer",
+          "form": true,
+          "title": "Database Port"
+        }
+      }
+    },
+    "ingressRoute": {
+      "type": "object",
+      "title": "Traefik Ingress Route Details",
+      "form": true,
+      "properties": {
+          "annotations": {
+              "type": "object"
+          },
+          "enabled": {
+              "type": "boolean",
+              "form": true
+          },
+          "host": {
+              "type": "string",
+              "form": true,
+              "title": "Use a custom hostname",
+              "description": "Enable the ingress resource that allows you to access the ccagc installation."
+          },
+          "tls": {
+              "type": "object",
+              "form": true,
+              "title": "Create a TLS secret for IngressRoute",
+              "properties": {
+                  "enabled": {
+                      "type": "boolean",
+                      "form": true,
+                      "title": "Create a TLS secret",
+                      "description": "Enable TLS resource that allows you to access the ccagc installation via https."
+                  }
+              }
+          }
+      }
+    },
+    "replicaCount": {
+      "type": "integer",
+      "form": true,
+      "title": "Number of Replicas"
+    },
+    "metrics": {
+      "type": "object",
+      "form": true,
+      "properties": {
+          "enabled": {
+            "type": "boolean",
+            "form": true
+        }
+      }
+    }
+  }
+}

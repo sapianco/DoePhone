@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ccagc.fullname" . }}
+  labels:
+    {{- include "ccagc.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  {{- if .Values.metrics.nginx.enabled }}
+    - name: nginx-metrics
+      port: 9113
+      targetPort: nginx-metrics
+  {{- end }}
+  {{- if .Values.metrics.phpfpm.enabled }}
+    - name: phpfpm-metrics
+      port: 9253
+      targetPort: phpfpm-metrics
+  {{- end }}
+  selector:
+    {{- include "ccagc.selectorLabels" . | nindent 4 }}

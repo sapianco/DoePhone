@@ -1,0 +1,135 @@
+apiVersion: {{ template "ccagc.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "ccagc.fullname" . }}
+  labels:
+    {{- include "ccagc.labels" . | nindent 4 }}
+    {{- include "ccagc.podLabels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "ccagc.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "ccagc.selectorLabels" . | nindent 8 }}
+        {{- include "ccagc.podLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ccagc.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "ccagc.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: VOE
+              value: "1"
+            - name: VICDIAL_DB
+              value: {{ required "A valid .Values.externalDatabase.host entry required!" .Values.externalDatabase.host | quote }}
+            - name: VICDIAL_DB_port
+              value: {{ required "A valid .Values.externalDatabase.port entry required!" .Values.externalDatabase.port | quote }}
+            - name: VICDIAL_DB_database
+              value: {{ required "A valid .Values.externalDatabase.database entry required!" .Values.externalDatabase.database | quote }}
+            - name: VICDIAL_DB_user
+              value: {{ required "A valid .Values.externalDatabase.user entry required!" .Values.externalDatabase.user | quote }}
+            - name: LOGO_URL
+              value: {{ .Values.logoUrl | quote }}
+            - name: VICDIAL_DB_pass
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ccagc.databaseSecretName" . }}
+                  key: mariadb-root-password
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /extras_sapian/health_check_Thohc5cohloh3saic5aj9efaechaepoo.php
+              port: http
+            initialDelaySeconds: 180
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /extras_sapian/health_check_Thohc5cohloh3saic5aj9efaechaepoo.php
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        {{- if .Values.metrics.nginx.enabled }}
+        - name: nginx-metrics
+          image: "{{ .Values.metrics.nginx.image.repository }}:{{ .Values.metrics.nginx.image.tag }}"
+          imagePullPolicy: {{ .Values.metrics.nginx.image.pullPolicy | quote }}
+          command: ['/usr/bin/exporter', '-nginx.scrape-uri', 'http://127.0.0.1:9532/metrics', '-nginx.retries', '5']
+          ports:
+            - name: nginx-metrics
+              containerPort: 9113
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: nginx-metrics
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: nginx-metrics
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          {{- if .Values.metrics.nginx.resources }}
+          resources: {{- toYaml .Values.metrics.nginx.resources | nindent 12 }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.metrics.phpfpm.enabled }}
+        - name: phpfpm-metrics
+          image: "{{ .Values.metrics.phpfpm.image.repository }}:{{ .Values.metrics.phpfpm.image.tag }}"
+          imagePullPolicy: {{ .Values.metrics.phpfpm.image.pullPolicy | quote }}
+          args: ["--phpfpm.scrape-uri", "tcp://127.0.0.1:9000/fpm-status"]
+          ports:
+            - name: phpfpm-metrics
+              containerPort: 9253
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: phpfpm-metrics
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: phpfpm-metrics
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          {{- if .Values.metrics.phpfpm.resources }}
+          resources: {{- toYaml .Values.metrics.phpfpm.resources | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

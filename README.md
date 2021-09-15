@@ -7,7 +7,7 @@ el Softphone WebRTC de [DialBox Online Edition](http://www.sapian.co/dialbox-onl
 ## Test whit Docker local
 
 ``` bash 
-docker run -v /home/arpagon/Workspace/DoePhone/DoePhone:/var/www/html/DoePhone --network host --rm -p 30080:8080 us.gcr.io/ccoe-246623/sapian/doephone:latest
+docker run -v /home/arpagon/Workspace/DoePhone/DoePhone:/var/www/html/DoePhone --network host --rm us.gcr.io/ccoe-246623/sapian/doephone:latest
 
 ```
 
@@ -20,7 +20,13 @@ https://localhost:2020/DoePhone
 ## Build
 
 ``` bash
-docker build --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg VCS_REF=$(git rev-parse --short HEAD) -t sapian/vicidial-ccweb-agc:1602 -t us.gcr.io/ccoe-246623/sapian/doephone:latest -t us.gcr.io/ccoe-246623/sapian/doephone:1602-r17 --build-arg VERSION=1602-r17  .
+version=0.0.1; 
+docker build \
+    --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+    --build-arg VCS_REF=$(git rev-parse --short HEAD) \
+    --tag us.gcr.io/ccoe-246623/sapian/doephone:latest \
+    --tag us.gcr.io/ccoe-246623/sapian/doephone:${version} \
+    --build-arg VERSION=${version} .
 ```
 
 

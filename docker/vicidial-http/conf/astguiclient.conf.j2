@@ -1,0 +1,103 @@
+# astguiclient.conf - configuration elements for the astguiclient package
+# this is the astguiclient configuration file
+# all comments will be lost if you run install.pl again
+
+# Paths used by astGUIclient
+PATHhome => /usr/share/astguiclient
+PATHlogs => /var/log/astguiclient
+PATHagi => /var/lib/asterisk/agi-bin
+PATHweb => /var/www/html
+PATHsounds => /var/lib/asterisk/sounds
+PATHmonitor => /var/spool/asterisk/monitor
+PATHDONEmonitor => /var/spool/recordings
+
+# The IP address of this machine
+{% if CCWEB_SERVICE_HOST is defined -%}
+VARserver_ip => {{CCWEB_SERVICE_HOST}}
+{%- else -%}
+VARserver_ip => 10.51.0.60
+{%- endif %}
+
+
+# Database connection information
+{% if VICDIAL_DB is defined -%}
+VARDB_server => {{VICDIAL_DB}}
+{%- else -%}
+VARDB_server => 10.51.0.60
+{%- endif %}
+
+{% if VICDIAL_DB_database is defined -%}
+VARDB_database => {{VICDIAL_DB_database}}
+{%- else -%}
+VARDB_database => asterisk
+{%- endif %}
+
+{% if VICDIAL_DB_user is defined -%}
+VARDB_user => {{VICDIAL_DB_user}}
+{%- else -%}
+VARDB_user => ccweb
+{%- endif %}
+
+{% if VICDIAL_DB_pass is defined -%}
+VARDB_pass => {{VICDIAL_DB_pass}}
+{%- else -%}
+VARDB_pass => 1234
+{%- endif %}
+
+{% if VICDIAL_DB_port is defined -%}
+VARDB_port => {{VICDIAL_DB_port}}
+{%- else -%}
+VARDB_port => 3306
+{%- endif %}
+
+# Database Custom connection information
+VARDB_custom_user => ccwebcustom
+{% if VICDIAL_DB_pass is defined -%}
+VARDB_custom_pass => {{VICDIAL_DB_pass}}
+{%- else -%}
+VARDB_custom_pass => 1234
+{%- endif %}
+
+# Alpha-Numeric list of the astGUIclient processes to be kept running
+# (value should be listing of characters with no spaces: 1234568)
+#  X - NO KEEPALIVE PROCESSES (use only if you want none to be keepalive)
+#  1 - AST_update
+#  2 - AST_send_listen
+#  3 - AST_VDauto_dial
+#  4 - AST_VDremote_agents
+#  5 - AST_VDadapt (If multi-server system, this must only be on one server)
+#  6 - FastAGI_log
+#  7 - AST_VDauto_dial_FILL (only for multi-server, this must only be on one server)
+#  8 - ip_relay (used for blind agent monitoring)
+#  9 - Timeclock auto logout
+VARactive_keepalives => X
+
+# Asterisk version VICIDIAL is installed for
+VARasterisk_version => 13.24.1
+
+# FTP recording archive connection information
+VARFTP_host => 169.254.217.250
+VARFTP_user => cron
+VARFTP_pass => test
+VARFTP_port => 21
+VARFTP_dir => RECORDINGS
+VARHTTP_path => http://169.254.217.250
+
+# REPORT server connection information
+VARREPORT_host => 169.254.217.250
+VARREPORT_user => cron
+VARREPORT_pass => test
+VARREPORT_port => 21
+VARREPORT_dir => REPORTS
+
+# Settings for FastAGI logging server
+VARfastagi_log_min_servers => 3
+VARfastagi_log_max_servers => 16
+VARfastagi_log_min_spare_servers => 2
+VARfastagi_log_max_spare_servers => 8
+VARfastagi_log_max_requests => 1000
+VARfastagi_log_checkfordead => 30
+VARfastagi_log_checkforwait => 60
+
+# Expected DB Schema version for this install
+ExpectedDBSchema => 1602

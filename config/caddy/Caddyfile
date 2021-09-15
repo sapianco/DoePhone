@@ -1,0 +1,5 @@
+localhost:2020 {
+  bind {$ADDRESS}
+  reverse_proxy localhost:8080
+  tls internal
+}
