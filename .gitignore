@@ -1,0 +1,46 @@
+# Miscellaneous
+DoePhone/*.class
+DoePhone/*.log
+DoePhone/*.pyc
+DoePhone/*.swp
+DoePhone/.DS_Store
+DoePhone/.atom/
+DoePhone/.buildlog/
+DoePhone/.history
+DoePhone/.svn/
+
+# IntelliJ related
+DoePhone/*.iml
+DoePhone/*.ipr
+DoePhone/*.iws
+DoePhone/.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+DoePhone/**/doc/api/
+DoePhone/**/ios/Flutter/.last_build_id
+DoePhone/.dart_tool/
+DoePhone/.flutter-plugins
+DoePhone/.flutter-plugins-dependencies
+DoePhone/.packages
+DoePhone/.pub-cache/
+DoePhone/.pub/
+DoePhone//build/
+
+# Web related
+DoePhone/lib/generated_plugin_registrant.dart
+
+# Symbolication related
+DoePhone/app.*.symbols
+
+# Obfuscation related
+DoePhone/app.*.map.json
+
+# Android Studio will place build artifacts here
+DoePhone/android/app/debug
+DoePhone/android/app/profile
+DoePhone/android/app/release
