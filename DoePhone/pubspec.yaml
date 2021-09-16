@@ -35,7 +35,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   sip_ua:
-    path: ../../
+    git:
+      url: git://github.com/flutter-webrtc/dart-sip-ua.git
   shared_preferences:
 
 dev_dependencies:
