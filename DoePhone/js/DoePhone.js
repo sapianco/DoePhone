@@ -78,13 +78,19 @@ var caller = '';
 var mediaStream;
 var mediaConstraints;
 
-var ua_config = {
+const uri = UserAgent.makeURI(sip_uri);
+if (!uri) {
+  // Failed to create URI
+  console.log('getUserMedia succeeded');
+}
+
+const options = {
 	userAgentString: 'DoePhone 2.5',
 	displayName: cid_name,
-	uri: sip_uri,
-	hackIpInContact: true,
-	hackViaTcp: true,
-	hackWssInTransport: true,
+	uri: uri,
+	// hackIpInContact: true,
+	// hackViaTcp: true,
+	// hackWssInTransport: true,
 	authorizationUser: auth_user,
 	password: password,
 	log: {
@@ -255,14 +261,14 @@ function sendButton( my_session ) {
 
 function registerButton( ua ) {
 	debug_out( 'Register Button Pressed' );
-	ua.register();
+	UserAgent.register();
 }
 
 
 
 function unregisterButton( ua ) {
 	debug_out( 'Un-Register Button Pressed' );
-	ua.unregister();
+	UserAgent.unregister();
 }
 
 
@@ -732,46 +738,102 @@ function initialize() {
 	uiElements.reg_status.value = get_translation('connecting');
 
 	// create the User Agent
-	ua = new SIP.UA(ua_config);
+	//ua = new SIP.UA(ua_config);
+	const userAgent = new UserAgent(ua_config);
 
-	// assign event handlers
-	ua.on('connected', function () {
-		setRegisterStatus('connected');
-	});
+	userAgent.start()
+    .then(() => {
+      console.log("Connected");
 
-	ua.on('registered', function () {
-		setRegisterStatus( 'registered' );
+      const registerer = new Registerer(userAgent);
 
-		// If auto dial out is enabled and a dial_number is given, do the auto dialing
-		if ( (auto_dial_out) && (uiElements.digits.value.length > 0) ) {
-			dialButton();
-		}
+      // Setup registerer state change handler
+      registerer.stateChange.addListener((newState) => {
+        switch (newState) {
+          case RegistererState.Registered:
+            console.log("Registered");
+			setRegisterStatus('Registered');
+            break;
+          case RegistererState.Unregistered:
+            console.log("Unregistered");
+			setRegisterStatus('Registered');
+            break;
+          case RegistererState.Terminated:
+            console.log("Terminated");
+			setRegisterStatus('Terminated');
+            break;
+        }
+      });
 
-		//added By ViciExperts to automatically login agent as soon as the webphone is loaded.
-		if ( auto_login ) {
-			try {
-				parent.NoneInSessionCalL('LOGIN');
-			}
-			catch(err){console.log(err);}
-		}
+      // Send REGISTER
+      registerer.register()
+        .then((request) => {
+          console.log("Successfully sent REGISTER");
+          console.log("Sent request = " + request);
+        })
+        .catch((error) => {
+          console.error("Failed to send REGISTER");
+        });
 
-	});
+      if (registerer.state === RegistererState.Registered) {
+        // Currently registered
+      }
 
-	ua.on('unregistered', function () {
-		setRegisterStatus( 'unregistered' );
-	});
+      // Send un-REGISTER
+      registerer.unregister()
+        .then((request) => {
+          console.log("Successfully sent un-REGISTER");
+          console.log("Sent request = " + request);
+        })
+        .catch((error) => {
+          console.error("Failed to send un-REGISTER");
+          console.log("Failed to send un-REGISTER");
+        });
 
-	ua.on('disconnected', function () {
-		setRegisterStatus('disconnected');
-	});
+    })
+    .catch((error) => {
+      console.error("Failed to connect");
+    });
 
-	ua.on('registrationFailed', function () {
-		setRegisterStatus('register_failed');
-	});
 
-	ua.on('invite', (session) => {
-		my_session = handleInvite(session);
-	});
+	// // assign event handlers
+	// ua.on('connected', function () {
+	// 	setRegisterStatus('connected');
+	// });
+
+	// ua.on('registered', function () {
+	// 	setRegisterStatus( 'registered' );
+
+	// 	// If auto dial out is enabled and a dial_number is given, do the auto dialing
+	// 	if ( (auto_dial_out) && (uiElements.digits.value.length > 0) ) {
+	// 		dialButton();
+	// 	}
+
+	// 	//added By ViciExperts to automatically login agent as soon as the webphone is loaded.
+	// 	if ( auto_login ) {
+	// 		try {
+	// 			parent.NoneInSessionCalL('LOGIN');
+	// 		}
+	// 		catch(err){console.log(err);}
+	// 	}
+
+	// });
+
+	// ua.on('unregistered', function () {
+	// 	setRegisterStatus( 'unregistered' );
+	// });
+
+	// ua.on('disconnected', function () {
+	// 	setRegisterStatus('disconnected');
+	// });
+
+	// ua.on('registrationFailed', function () {
+	// 	setRegisterStatus('register_failed');
+	// });
+
+	// ua.on('invite', (session) => {
+	// 	my_session = handleInvite(session);
+	// });
 
 };
 
