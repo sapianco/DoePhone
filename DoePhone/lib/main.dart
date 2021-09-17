@@ -52,9 +52,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'DoePhone',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        primaryColorDark: Colors.green[900],
+        primaryColorLight: Colors.green[900],
         fontFamily: 'Roboto',
       ),
       initialRoute: '/',

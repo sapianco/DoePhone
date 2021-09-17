@@ -44,13 +44,13 @@ class _MyRegisterWidget extends State<RegisterWidget>
     _preferences = await SharedPreferences.getInstance();
     this.setState(() {
       _wsUriController.text =
-          _preferences.getString('ws_uri') ?? 'wss://tryit.jssip.net:10443';
+          _preferences.getString('ws_uri') ?? 'wss://sbc.dialbox.cloud/wss/sip/';
       _sipUriController.text =
-          _preferences.getString('sip_uri') ?? 'hello_flutter@tryit.jssip.net';
+          _preferences.getString('sip_uri') ?? 'doephone@sapian.sbc.dialbox.cloud';
       _displayNameController.text =
-          _preferences.getString('display_name') ?? 'Flutter SIP UA';
+          _preferences.getString('display_name') ?? 'DoePhone';
       _passwordController.text = _preferences.getString('password');
-      _authorizationUserController.text = _preferences.getString('auth_user');
+      _authorizationUserController.text = _preferences.getString('auth_user') ?? 'doephone';
     });
   }
 
@@ -108,7 +108,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
     settings.authorizationUser = _authorizationUserController.text;
     settings.password = _passwordController.text;
     settings.displayName = _displayNameController.text;
-    settings.userAgent = 'Dart SIP Client v1.0.0';
+    settings.userAgent = 'DoePhone SIP Client v1.0.0';
     settings.dtmfMode = DtmfMode.RFC2833;
 
     helper.start(settings);
@@ -274,7 +274,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
-                          color: Colors.blue,
+                          color: Colors.green[900],
                           textColor: Colors.white,
                           onPressed: () => _handleSave(context),
                         ),

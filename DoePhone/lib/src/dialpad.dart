@@ -32,7 +32,7 @@ class _MyDialPadWidget extends State<DialPadWidget>
 
   void _loadSettings() async {
     _preferences = await SharedPreferences.getInstance();
-    _dest = _preferences.getString('dest') ?? 'sip:hello_jssip@tryit.jssip.net';
+    _dest = _preferences.getString('dest') ?? 'sip:*43@sapian.sbc.dialbox.cloud';
     _textController = TextEditingController(text: _dest);
     _textController.text = _dest;
 
@@ -202,7 +202,8 @@ class _MyDialPadWidget extends State<DialPadWidget>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Dart SIP UA Demo"),
+          title: Text("DoePhone"),
+          backgroundColor: Colors.green[900],
           actions: <Widget>[
             PopupMenuButton<String>(
                 onSelected: (String value) {

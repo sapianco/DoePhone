@@ -1,8 +1,8 @@
 #!/bin/bash
 
 FLUTTER_APP_FOLDER=$(cd `dirname $0`/../; pwd)
-FLUTTER_APP_ORG=com.github.cloudwebrtc
-FLUTTER_APP_PROJECT_NAME=dart_sip_ua_example
+FLUTTER_APP_ORG=cloud.dialbox.doephone
+FLUTTER_APP_PROJECT_NAME=doephone
 CMD=$1
 
 function cleanup() {
@@ -17,7 +17,7 @@ function create() {
         echo "Create flutter project: name=$FLUTTER_APP_PROJECT_NAME, org=$FLUTTER_APP_ORG ..."
         flutter config --enable-macos-desktop
         flutter config --enable-web
-        flutter create --android-language java --androidx --ios-language objc --project-name $FLUTTER_APP_PROJECT_NAME --org $FLUTTER_APP_ORG .
+        flutter create --android-language java --ios-language objc --project-name $FLUTTER_APP_PROJECT_NAME --org $FLUTTER_APP_ORG .
         add_permission_label
     else
         echo "Project [$FLUTTER_APP_PROJECT_NAME] already exists!"
