@@ -1,0 +1,23 @@
+{
+ "name": "doephone",
+ "short_name": "doephone",
+ "start_url": "https://doephone.dialbox.cloud",
+ "display": "standalone",
+ "background_color": "#0175C2",
+ "theme_color": "#0175C2",
+ "description": "Softphone WebRTC de DialBox Online Edition",
+ "orientation": "portrait-primary",
+ "prefer_related_applications": false,
+ "icons": [
+    {
+        "src": "icons/android-chrome-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+    },
+    {
+        "src": "icons/android-chrome-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }
+]
+}
