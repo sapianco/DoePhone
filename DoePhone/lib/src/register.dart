@@ -17,9 +17,19 @@ class _MyRegisterWidget extends State<RegisterWidget>
   TextEditingController _displayNameController = TextEditingController();
   TextEditingController _authorizationUserController = TextEditingController();
   Map<String, String> _wsExtraHeaders = {
-    'Origin': ' https://tryit.jssip.net',
-    'Host': 'tryit.jssip.net:10443'
+    'Origin': ' https://doephone.dialbox.cloud',
+    'Host': 'sbc.dialbox.cloud'
   };
+  List<Map<String, String>> _iceServers = <Map<String, String>>[
+    <String, String>{'url': 'stun:stun.l.google.com:19302'},
+// turn server configuration example.
+    {'url': 'stun:sbc.dialbox.cloud:3478'},
+    {
+      'url': 'turn:sbc.dialbox.cloud:3478',
+      'username': 'doephone',
+      'credential': 'Esheil0maingoh3i'
+    },
+  ];
   SharedPreferences _preferences;
   RegistrationState _registerState;
 
@@ -110,6 +120,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
     settings.displayName = _displayNameController.text;
     settings.userAgent = 'DoePhone SIP Client v1.0.0';
     settings.dtmfMode = DtmfMode.RFC2833;
+    settings.iceServers = _iceServers;
 
     helper.start(settings);
   }

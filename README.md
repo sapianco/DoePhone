@@ -38,3 +38,38 @@ helm package --destination release/ helm/ccagc/
 
 ## Upload new Version of Chart
 curl -u sapian:superpassword --data-binary "@release/doephone-7.9.2.tgz" https://chartmuseum.voe.sapian.cloud/api/charts
+
+# Publish doephone.dialbox.cloud
+
+## Gen Static site to $(pwd)/static
+
+``` bash
+cd ~/Workspace/DoePhone/DoePhone
+flutter build web
+cp web/error.html build/web/
+```
+
+## S3 Radosgw static file config
+
+```
+cd ~/Workspace/DoePhone/s3-ceph-rados-gw
+s3cmd -c ~/.s3cfg.d/doephone setpolicy PublicGetObjet.json s3://doephone.dialbox.cloud
+```
+
+## Upload Static Site to s3 ceph-radosgw
+
+``` bash
+aws --profile=doephone --endpoint-url=https://ceph.sapian.cloud s3 sync ~/Workspace/DoePhone/DoePhone/build/web/ s3://doephone.dialbox.cloud/
+```
+
+## Config Bucket as s3website
+
+```
+cd ~/Workspace/DoePhone/s3-ceph-rados-gw
+aws --profile=doephone --endpoint-url=http://172.16.244.104 s3api put-bucket-website --bucket doephone.dialbox.cloud --website-configuration file://website.json
+```
+
+## Creart DNS records.
+```
+doephone.dialbox.cloud.	300	IN	CNAME	doephone.dialbox.cloud.s3website-cur.sapian.cloud.
+```

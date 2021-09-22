@@ -137,7 +137,7 @@ class AboutWidget extends StatelessWidget {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  Image.asset('images/Logo_circular_VoePhone_vertical_name_bg_32dpi.png'),
+                  Image.asset('assets/images/Logo_circular_VoePhone_vertical_name_bg_32dpi.png'),
                   Text('Softphone WebRTC de DialBox Online Edition', style: TextStyle(fontWeight: FontWeight.bold),),
                   RichText(
                     text: TextSpan(
