@@ -18,7 +18,11 @@ straightforward as possible.
 ### Changed
  
 ### Fixed
- 
+
+## [1.2.3] - 2020-11-04
+  
+ADD auto-register at the start after be configured in /register
+
 ## [1.0.1] - 2020-09-22
   
 First Functional Version whit Sapian SBCaaS via Turn Server

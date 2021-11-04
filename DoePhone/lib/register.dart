@@ -16,11 +16,11 @@ class _MyRegisterWidget extends State<RegisterWidget>
   TextEditingController _sipUriController = TextEditingController();
   TextEditingController _displayNameController = TextEditingController();
   TextEditingController _authorizationUserController = TextEditingController();
-  Map<String, String> _wsExtraHeaders = {
+  final Map<String, String> _wsExtraHeaders = {
     'Origin': ' https://doephone.dialbox.cloud',
     'Host': 'sbc.dialbox.cloud'
   };
-  List<Map<String, String>> _iceServers = <Map<String, String>>[
+  final List<Map<String, String>> _iceServers = <Map<String, String>>[
     <String, String>{'url': 'stun:stun.l.google.com:19302'},
 // turn server configuration example.
     {'url': 'stun:sbc.dialbox.cloud:3478'},
@@ -32,6 +32,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
   ];
   SharedPreferences _preferences;
   RegistrationState _registerState;
+  bool _registerAtStart = false;
 
   SIPUAHelper get helper => widget._helper;
 
@@ -52,7 +53,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
 
   void _loadSettings() async {
     _preferences = await SharedPreferences.getInstance();
-    this.setState(() {
+    setState(() {
       _wsUriController.text =
           _preferences.getString('ws_uri') ?? 'wss://sbc.dialbox.cloud/wss/sip/';
       _sipUriController.text =
@@ -61,6 +62,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
           _preferences.getString('display_name') ?? 'DoePhone';
       _passwordController.text = _preferences.getString('password');
       _authorizationUserController.text = _preferences.getString('auth_user') ?? 'doephone';
+      _registerAtStart = _preferences.getBool('register_at_start') ?? false;
     });
   }
 
@@ -70,11 +72,12 @@ class _MyRegisterWidget extends State<RegisterWidget>
     _preferences.setString('display_name', _displayNameController.text);
     _preferences.setString('password', _passwordController.text);
     _preferences.setString('auth_user', _authorizationUserController.text);
+    _preferences.setBool('register_at_start', _registerAtStart);
   }
 
   @override
   void registrationStateChanged(RegistrationState state) {
-    this.setState(() {
+    setState(() {
       _registerState = state;
     });
   }
@@ -160,7 +163,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
                         child: TextFormField(
                           controller: _wsUriController,
                           keyboardType: TextInputType.text,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
                             border: UnderlineInputBorder(
@@ -184,7 +187,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
                         child: TextFormField(
                           controller: _sipUriController,
                           keyboardType: TextInputType.text,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
                             border: UnderlineInputBorder(
@@ -208,7 +211,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
                         child: TextFormField(
                           controller: _authorizationUserController,
                           keyboardType: TextInputType.text,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
                             border: UnderlineInputBorder(
@@ -237,7 +240,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
                         child: TextFormField(
                           controller: _passwordController,
                           keyboardType: TextInputType.text,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
                             border: UnderlineInputBorder(
@@ -264,7 +267,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
                         child: TextFormField(
                           controller: _displayNameController,
                           keyboardType: TextInputType.text,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10.0),
                             border: UnderlineInputBorder(
@@ -275,22 +278,39 @@ class _MyRegisterWidget extends State<RegisterWidget>
                     ],
                   ),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 18.0, 0.0, 0.0),
-                      child: Container(
-                        height: 48.0,
-                        width: 160.0,
-                        child: MaterialButton(
-                          child: Text(
-                            'Register',
-                            style:
-                                TextStyle(fontSize: 16.0, color: Colors.white),
-                          ),
-                          color: Colors.green[900],
-                          textColor: Colors.white,
-                          onPressed: () => _handleSave(context),
+                    padding: const EdgeInsets.fromLTRB(48.0, 0.0, 48.0, 0),
+                    child: CheckboxListTile(
+                      title: const Text('Register at start'),
+                      secondary: const Icon(Icons.login),
+                      value: _registerAtStart,
+                      onChanged: (bool value) {
+                        setState(() {
+                          _registerAtStart = value;
+                        });
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 18.0, 0.0, 0.0),
+                    child: Container(
+                      height: 48.0,
+                      width: 160.0,
+                      child: MaterialButton(
+                        color: Colors.green[900],
+                        textColor: Colors.white,
+                        onPressed: () => _handleSave(context),
+                        child: Text(
+                          'Register',
+                          style:
+                              TextStyle(fontSize: 16.0, color: Colors.white),
                         ),
-                      ))
-                ])));
+                      ),
+                    )
+                  )
+                ]
+              )
+            )
+          );
   }
 
   @override

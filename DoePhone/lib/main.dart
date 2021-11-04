@@ -1,13 +1,15 @@
+import 'package:doephone/home.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 
 import 'package:flutter/material.dart';
 import 'package:sip_ua/sip_ua.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'src/register.dart';
-import 'src/dialpad.dart';
-import 'src/callscreen.dart';
-import 'src/about.dart';
+import 'register.dart';
+import 'dialpad.dart';
+import 'callscreen.dart';
+import 'about.dart';
+import 'home.dart';
 
 void main() {
   if (WebRTC.platformIsDesktop) {
@@ -24,11 +26,10 @@ class MyApp extends StatelessWidget {
   final SIPUAHelper _helper = SIPUAHelper();
   Map<String, PageContentBuilder> routes = {
     '/': ([SIPUAHelper helper, Object arguments]) => DialPadWidget(helper),
-    '/register': ([SIPUAHelper helper, Object arguments]) =>
-        RegisterWidget(helper),
-    '/callscreen': ([SIPUAHelper helper, Object arguments]) =>
-        CallScreenWidget(helper, arguments as Call),
+    '/register': ([SIPUAHelper helper, Object arguments]) => RegisterWidget(helper),
+    '/callscreen': ([SIPUAHelper helper, Object arguments]) => CallScreenWidget(helper, arguments as Call),
     '/about': ([SIPUAHelper helper, Object arguments]) => AboutWidget(),
+    '/Home': ([SIPUAHelper helper, Object arguments]) => HomeWidget(),
   };
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
         primaryColorDark: Colors.green[900],
-        primaryColorLight: Colors.green[900],
+        primaryColorLight: Colors.green[100],
         fontFamily: 'Roboto',
       ),
       initialRoute: '/',
