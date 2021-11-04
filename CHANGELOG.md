@@ -19,7 +19,7 @@ straightforward as possible.
  
 ### Fixed
 
-## [1.2.3] - 2020-11-04
+## [1.1.3] - 2020-11-04
   
 ADD auto-register at the start after be configured in /register
 
