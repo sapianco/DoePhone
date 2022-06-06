@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
+import 'dart:typed_data';
 
 import 'widgets/action_button.dart';
 import 'package:sip_ua/sip_ua.dart';
@@ -60,6 +63,11 @@ class _MyCallScreenWidget extends State<CallScreenWidget>
     _disposeRenderers();
   }
 
+  static AudioPlayer player = AudioPlayer();
+  static String audioasset = "assets/ring.mp3";
+
+
+
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       Duration duration = Duration(seconds: timer.tick);
@@ -74,6 +82,16 @@ class _MyCallScreenWidget extends State<CallScreenWidget>
       }
     });
   }
+
+  play() async {
+
+  //ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
+  //Uint8List audiobytes = bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+  int result = await player.play("assets/ring.mp3", isLocal: true);
+  }
+  stop() async {
+   int result = await player.stop();
+   }
 
   void _initRenderers() async {
     if (_localRenderer != null) {
@@ -195,11 +213,13 @@ class _MyCallScreenWidget extends State<CallScreenWidget>
   }
 
   void _handleHangup() {
+    stop();
     call.hangup();
     _timer.cancel();
   }
 
   void _handleAccept() async {
+    stop();
     final mediaConstraints = <String, dynamic>{'audio': true, 'video': true};
     MediaStream mediaStream;
 
@@ -369,6 +389,8 @@ class _MyCallScreenWidget extends State<CallScreenWidget>
       case CallStateEnum.NONE:
       case CallStateEnum.CONNECTING:
         if (direction == 'INCOMING') {
+
+         play();
           basicActions.add(ActionButton(
             title: "Accept",
             fillColor: Colors.green,
@@ -446,6 +468,7 @@ class _MyCallScreenWidget extends State<CallScreenWidget>
         break;
       case CallStateEnum.FAILED:
       case CallStateEnum.ENDED:
+        stop();
         basicActions.add(hangupBtnInactive);
         break;
       case CallStateEnum.PROGRESS:
