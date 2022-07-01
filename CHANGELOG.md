@@ -19,6 +19,9 @@ straightforward as possible.
  
 ### Fixed
 
+## [1.1.3] - 2020-07-01
+ADD Ringtone on INbound Call
+
 ## [1.1.3] - 2020-11-04
   
 ADD auto-register at the start after be configured in /register
