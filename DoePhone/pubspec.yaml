@@ -11,7 +11,7 @@ description: Softphone WebRTC de DialBox Online Edition
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.3
+version: 1.1.4
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -30,6 +30,7 @@ dependencies:
   package_info_plus: ^1.0.6
   url_launcher: ^6.0.10
   flutter_svg: ^0.22.0
+  audioplayers: ^0.20.1
   #firebase_analytics: ^8.3.2
 
 dev_dependencies:
@@ -52,6 +53,7 @@ flutter:
   - assets/images/Logo_circular_VoePhone_vertical_name_bg_32dpi.png
   - assets/images/Logo_circular_DoePhone.svg
   - assets/images/bg.png
+  - assets/ring.mp3
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
